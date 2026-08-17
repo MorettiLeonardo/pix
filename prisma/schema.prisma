@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model accounts {
+  id      String @id @default(uuid())
+  balance Int
+}
+
+enum transfer_status {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model transactions {
+  id              String         @id @default(uuid())
+  payer_id        String
+  payee_id        String
+  amount          Int
+  idempotency_key String         @unique
+  status          transfer_status
+  failure_reason  String?
+  created_at      DateTime       @default(now())
+}
