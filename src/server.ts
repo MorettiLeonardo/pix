@@ -4,7 +4,7 @@ import type { Request, Response } from 'express'
 import { getTransferById, transferSchema } from './types/schemas'
 import { prisma } from './prisma/prisma'
 import { transfer_status } from '../prisma/generated/prisma/enums'
-import { transferQueue } from './queues/transferQueue'
+import { transferQueue } from './queues/transfer.queue'
 
 const app = express()
 
@@ -42,19 +42,17 @@ route.post("/transfers", async (req: Request, res: Response) => {
   const { payer_id, payee_id, amount, idempotency_key } = parsedData.data
 
   try {
-    const transfer = await prisma.transactions.create({
-      data: {
+      const data = {
         amount,
         idempotency_key,
         payee_id,
         payer_id,
         status: transfer_status.PENDING,
       }
-    })
 
-    await transferQueue.add('transfer-queue', transfer)
+    await transferQueue.add('transfer-queue', data)
 
-    return res.status(201).send({ "status": transfer.status })
+    return res.status(201).send({ "status": data.status })
   } catch (error) {
     console.log(`Error on transfer: ${error}`)
   }
