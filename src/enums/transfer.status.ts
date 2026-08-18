@@ -1,5 +1,5 @@
 export enum TRANSFER_STATUS {
-  PENDING,
-  COMPLETED,
-  FAILED
+    PENDING,
+    COMPLETED,
+    FAILED,
 }

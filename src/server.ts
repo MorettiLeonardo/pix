@@ -6,18 +6,19 @@ import { transferRoutes } from './routes/transfer'
 
 const app = express()
 
+const route = Router()
+
 app.use(express.json())
 
-export const route = Router()
-
 app.use(route)
-app.use("/accounts", accountsRouter)
-app.use("/transfers", transferRoutes)
 
-route.get("/health", (req: Request, res: Response) => {
-  res.send({ "health": "ok" })
+app.use('/accounts', accountsRouter)
+app.use('/transfers', transferRoutes)
+
+route.get('/health', (req: Request, res: Response) => {
+    res.send({ health: 'ok' })
 })
 
 app.listen(process.env.PORT, () => {
-  console.log("Server running on port 3333")
+    console.log('Server running on port 3333')
 })
